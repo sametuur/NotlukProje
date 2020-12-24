@@ -19,7 +19,7 @@ public class TimePickerFragment extends DialogFragment {
         int hour = Calendars.get(Calendar.HOUR_OF_DAY);
         int minute = Calendars.get(Calendar.MINUTE);
 
-
+        //Murat Bayrak Tarafından Fork Edilip Projeye başlanmıştır.
         return new TimePickerDialog(getActivity(),(TimePickerDialog.OnTimeSetListener)getActivity(),hour,minute, DateFormat.is24HourFormat(getActivity()));
     }
 }
