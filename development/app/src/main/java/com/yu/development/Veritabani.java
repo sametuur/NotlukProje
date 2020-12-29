@@ -1,74 +1,149 @@
 package com.yu.development;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Veritabani {
-    //VeriTabanı Tablo ve isim adlarını yaz
-    private static final String DATABASE_ISIM = "Kisiler";
-    private static final String DATABASE_TABLO = "Rehber";
+public class Veritabani extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME="TABAN";
+    private static final String TABAN_TABLE = "gg";
     private static final int DATABASE_VERSION = 1;
 
-    //Veritabanını kullanacak sınıfları tutan Context nesnesi
-    private final Context contextim;
-    //Oluşturduğumuz veritabanıyardımcı sınıfının nesnesi
-    private VeritabaniHelper veritabanihelper;
-    //Veritabanımızın nesnesi
-    private SQLiteDatabase veritabanim;
 
-    // Oluşturulacak insanlar tablosunun sütunları
-    public static final String KEY_ROW_ID = "_id";
-    public static final String KEY_ISIM = "isim";
-    public static final String KEY_TELEFON = "telefon";
-    //Constructor kısmı
-    public Veritabani(Context c) {
-        this.contextim = c;
+
+    public Veritabani(Context context){
+        super (context,DATABASE_NAME,null,DATABASE_VERSION);
     }
 
-    //Veritabanı bağlantıyı açıp içine veri girebildiğimiz kısım.
-    public Veritabani baglantiyiAc() throws SQLException {
-
-        veritabanihelper = new VeritabaniHelper(contextim);
-        veritabanim = veritabanihelper.getWritableDatabase();
-
-        return this;
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String sqltabloolustur = "CREATE TABLE "+ TABAN_TABLE + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,MYTEXT TEXT)";
+        db.execSQL(sqltabloolustur);
 
     }
-    //Veritabanını kapattığımız kısım
-    public void baglantiyiKapat() {
 
-        veritabanihelper.close();
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABAN_TABLE);
+    }
+
+
+    public void Ekle(Model text){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("MYTEXT",text.getText());
+        db.insert(TABAN_TABLE,null,cv);
+        db.close();
 
     }
-    //Bu kısımda ise Veritabanı oluşturacağız. SQLiteOperHelper'dan kalıtım alıyoruz. 2 Metodu var. Oncreate ve OnUpgrade
-    //Bu kısımda yapılan işlemler OnCreate'te Veritabanını SQL komut olarak oluşturduk. OnUpgrade'de tabloyu silip tekrar oluşt    //urduk
-    private static class VeritabaniHelper extends SQLiteOpenHelper {
+    public List<Model> Verigetir () {
+        List<Model> yazi = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM "+TABAN_TABLE;
+        Cursor cursor = db.rawQuery(selectQuery,null);
+        Model text = null ;
+        if (cursor.moveToFirst()){
+            do {
+                text = new Model ();
+                text.setID(Integer.parseInt(cursor.getString(0)));
+                text.setText(cursor.getString(1));
 
-        public VeritabaniHelper(Context contextim) {
-            super(contextim, DATABASE_ISIM, null, DATABASE_VERSION);
-
+            }while (cursor.moveToNext());
         }
+        return yazi;
+    }
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            // TODO Auto-generated method stub
-            db.execSQL("CREATE TABLE " + DATABASE_TABLO + " (" + KEY_ROW_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT , " + KEY_ISIM
-                    + " TEXT NOT NULL, " + KEY_TELEFON + " TEXT NOT NULL);");
 
-        }
 
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // TODO Auto-generated method stub
 
-            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLO);
-            onCreate(db);
 
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /* private static final String DATABASE_NAME="TABAN";
+    private static final int DATABASE_VERSION = 1;
+    private static final String TABAN_TABLE = "gg";
+
+
+
+    public static final String ROW_ID="id";
+    public static final String ROW_NAME="ad";
+
+
+    public Veritabani(Context context ) { super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABAN_TABLE + "("+ROW_ID+" INTEGER PRIMARY KEY ,"+ROW_NAME+"TEXT NOT NULL)");
 
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABAN_TABLE);
+        onCreate(db);
+
+    }
+    public void VeriEKle(String tablom){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(ROW_NAME,tablom.trim());
+        db.insert(TABAN_TABLE,null,cv);
+        db.close();
+    }
+    public List<String> Verilistele(){
+        ArrayList<String> veriler = new ArrayList<String>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] sutunlar = {ROW_ID,ROW_NAME};
+        Cursor cursor = db.query(TABAN_TABLE,sutunlar,null,null,null,null,null);
+        while(cursor.moveToNext())
+            veriler.add(cursor.getInt(0) + "-" + cursor.getString(1));
+        return veriler;
+    }
+       public List<Kisiler> TumKayitlariGetir() {
+            SQLiteDatabase vt = this.getReadableDatabase();
+            String[] sutunlar = new String[]{ROW_AD, ROW_SOYAD};
+            Cursor c = vt.query(AJANDA_TABLE, sutunlar, null,null,null,null,null);
+            int adsirano = c.getColumnIndex(ROW_AD);
+            int soyadsirano = c.getColumnIndex(ROW_SOYAD);
+            List<Kisiler> kisilerList = new ArrayList<Kisiler>();
+            for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+                Kisiler kisiler = new Kisiler();
+                kisiler.setAd(c.getString(adsirano));
+                kisiler.setSoyAd(c.getString(soyadsirano));
+                kisilerList.add(kisiler);
+            }
+            vt.close();
+            return kisilerList;
+        }
+         public long KayitEkle(Kisiler kisiler) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(ROW_AD, kisiler.getAd());
+        cv.put(ROW_SOYAD, kisiler.getSoyAd());
+        long id = db.insert(AJANDA_TABLE, null, cv);
+        db.insert(AJANDA_TABLE, null, cv);
+        db.close();
+        return id;
+    }
+
+*/
 }
