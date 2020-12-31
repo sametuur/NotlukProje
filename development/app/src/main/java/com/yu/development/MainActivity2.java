@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public class MainActivity2 extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
@@ -34,7 +34,6 @@ public class MainActivity2 extends AppCompatActivity implements TimePickerDialog
         textView3 =findViewById(R.id.textView3);
         listView = findViewById(R.id.listview);
 
-
         button3=findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +50,7 @@ public class MainActivity2 extends AppCompatActivity implements TimePickerDialog
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent rTent = new Intent(getApplicationContext(), gunluk.class);
                 startActivity(rTent);
 
@@ -62,7 +62,7 @@ public class MainActivity2 extends AppCompatActivity implements TimePickerDialog
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         textView3 = findViewById(R.id.textView3);
         textView3.setText("Saat : " + hourOfDay + "Dakika : "+ minute);
-
-
     }
+
+
 }
