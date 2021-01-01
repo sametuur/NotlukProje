@@ -2,8 +2,10 @@ package com.yu.development;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -60,13 +62,33 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        /*list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), list.getItemAtPosition(position).toString(),Toast.LENGTH_SHORT).show();
-                return false;
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id ) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Notluk");
+                builder.setMessage("Bu aktiviteyi silmek istediğinize emin misiniz?");
+                builder.setNegativeButton("Hayır", null);
+                builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    /*    Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);*/
+                        DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
+                        helper.deleteUser(i);
+
+
+                        /* Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();*/
+                    }
+                });
+                builder.show();
+                return true;
             }
-        });*/
+        });
         list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
