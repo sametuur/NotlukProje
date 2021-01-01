@@ -41,8 +41,6 @@ public class MainActivity2 extends AppCompatActivity implements TimePickerDialog
                 DialogFragment timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(),"Time Picker");
 
-
-
             }
         });
 
