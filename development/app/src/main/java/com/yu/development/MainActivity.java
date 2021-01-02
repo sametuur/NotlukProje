@@ -89,20 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), list.getItemAtPosition(position).toString(),Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(getApplicationContext(), "VAZ GEÇTİM KNKS",Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(Tent);
             showInterstitial();
         });
-
-        //  tvToken = findViewById(R.id.tv_log);
         MyReceiver receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.yu.development.onNewToken");
