@@ -36,6 +36,8 @@ public class gunluk extends AppCompatActivity {
             public void onClick(View v) {
                 String userName = ((EditText) findViewById(R.id.editname)).getText().toString();
                 String kayit =((EditText) findViewById(R.id.editTextTextMultiLine)).getText().toString();
+                Intent Tent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(Tent);
                 User user = new User();
                 user.setUserName(userName);
                gunlukara gunluk = new gunlukara();

@@ -1,8 +1,8 @@
 package com.yu.development;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,24 +10,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.BannerAdSize;
 import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.InterstitialAd;
 import com.huawei.hms.ads.banner.BannerView;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,52 +44,37 @@ public class MainActivity extends AppCompatActivity {
         AdParam adParam = new AdParam.Builder().build();
         interstitialAd.loadAd(adParam);
 
-        listele.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseHelper db = new DatabaseHelper(MainActivity.this);
-                List<String> veriler = db.getAllUsers();
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, veriler);
-                list.setAdapter(adapter);
+        listele.setOnClickListener(v -> {
+            DatabaseHelper db = new DatabaseHelper(MainActivity.this);
+            List<String> veriler = db.getAllUsers();
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, veriler);
+            list.setAdapter(adapter);
 
-            }
         });
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id ) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Notluk");
-                builder.setMessage("Bu aktiviteyi silmek istediğinize emin misiniz?");
-                builder.setNegativeButton("Hayır", null);
-                builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    /*    Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getPackageName(), null);
-                        intent.setData(uri);
-                        startActivity(intent);*/
-                        DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-                        helper.deleteUser(i);
+        list.setOnItemLongClickListener((parent, view, position, id) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Notluk");
+            builder.setMessage("Aktiviteyi Silmek İstediğinize Emin Misiniz?");
+            builder.setNegativeButton("Hayır", null);
+            builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                        /* Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();*/
-                    }
-                });
-                builder.show();
-                return true;
-            }
+                    /** TO DO eleman silinmiyor */
+
+                }
+            });
+            builder.show();
+            return true;
         });
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Toast.makeText(getApplicationContext(), list.getItemAtPosition(position).toString(),Toast.LENGTH_SHORT).show();*/
-                Intent rTent = new Intent(getApplicationContext(), Araci.class);
-                rTent.putExtra("tag",  list.getItemAtPosition(position).toString());
-                startActivity(rTent);
 
-            }
+
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            Intent rTent = new Intent(getApplicationContext(), Araci.class);
+            rTent.putExtra("tag",  list.getItemAtPosition(position).toString());
+            startActivity(rTent);
+
         });
 
         button.setOnClickListener(v -> {
@@ -105,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(Tent);
             showInterstitial();
         });
+
         MyReceiver receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.yu.development.onNewToken");
@@ -170,6 +148,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
- }
+}
 
 
