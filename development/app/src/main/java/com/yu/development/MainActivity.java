@@ -2,7 +2,6 @@ package com.yu.development;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,13 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
         AdParam adParam = new AdParam.Builder().build();
         interstitialAd.loadAd(adParam);
+        DatabaseHelper db = new DatabaseHelper(MainActivity.this);
+        List<String> veriler = db.getAllUsers();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, veriler);
 
         listele.setOnClickListener(v -> {
-            DatabaseHelper db = new DatabaseHelper(MainActivity.this);
-            List<String> veriler = db.getAllUsers();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, veriler);
             list.setAdapter(adapter);
-
         });
         list.setOnItemLongClickListener((parent, view, position, id) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -59,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                    /** TO DO eleman silinmiyor */
-
+                    DatabaseHelper db = new DatabaseHelper(MainActivity.this);
+                    db.deleteUser(list.getItemAtPosition(position).toString());
+                    adapter.remove(adapter.getItem(position));
+                    adapter.notifyDataSetChanged();
                 }
             });
             builder.show();
@@ -72,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
         list.setOnItemClickListener((parent, view, position, id) -> {
             Intent rTent = new Intent(getApplicationContext(), Araci.class);
-            rTent.putExtra("tag",  list.getItemAtPosition(position).toString());
+            rTent.putExtra("tag", list.getItemAtPosition(position).toString());
             startActivity(rTent);
 
         });
 
         button.setOnClickListener(v -> {
-            Intent Tent = new Intent(getApplicationContext(),gunluk.class);
+            Intent Tent = new Intent(getApplicationContext(), gunluk.class);
             startActivity(Tent);
             showInterstitial();
         });
@@ -101,18 +99,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public void loadBannerAd(){
+
+    public void loadBannerAd() {
         BannerView bannerView = new BannerView(this);
         bannerView.setAdId("testw6vs28auh3");
         bannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_SMART);
         AdParam adParam = new AdParam.Builder().build();
         bannerView.loadAd(adParam);
     }
+
     private AdListener adListener = new AdListener() {
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
-            //Toast.makeText(MainActivity.this, "Ad loaded", Toast.LENGTH_SHORT).show();
         }
 
         @Override

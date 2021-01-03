@@ -1,7 +1,5 @@
 package com.yu.development;
 
-import android.content.Intent;
-
 public class User {
    private Integer ID;
     private String userName;

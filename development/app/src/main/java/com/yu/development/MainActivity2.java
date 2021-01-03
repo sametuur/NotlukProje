@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import java.util.Calendar;
 public class MainActivity2 extends AppCompatActivity {
     Button button2, button3;
     TextView textView3,textView5;
-    ListView listView;
     TimePickerDialog timePickerDialog;
     Calendar calendar;
     int currentHour;
